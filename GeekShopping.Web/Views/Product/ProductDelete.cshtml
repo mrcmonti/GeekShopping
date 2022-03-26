@@ -46,7 +46,9 @@
             </div>
 
             <div class="col-5">
-                <input type="submit" value="Delete" class="btn btn-danger form-control" />
+                @if(User.IsInRole("Admin")){
+                    <input type="submit" value="Delete" class="btn btn-danger form-control" />
+                }
             </div>
         </div>
     </div>
