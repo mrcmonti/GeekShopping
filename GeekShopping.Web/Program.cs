@@ -11,6 +11,10 @@ builder.Services.AddHttpClient<IProductService, ProductService>(c =>
     c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:ProductAPI"])
     );
 
+builder.Services.AddHttpClient<ICartService, CartService>(c =>
+    c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:CartAPI"])
+    );
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
