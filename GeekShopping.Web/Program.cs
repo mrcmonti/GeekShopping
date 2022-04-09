@@ -15,9 +15,9 @@ builder.Services.AddHttpClient<ICartService, CartService>(c =>
     c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:CartAPI"])
     );
 
-//builder.Services.AddHttpClient<ICouponService, CouponService>(c =>
-//    c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:CouponAPI"])
-//    );
+builder.Services.AddHttpClient<ICouponService, CouponService>(c =>
+    c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:CouponAPI"])
+    );
 
 builder.Services.AddAuthentication(options =>
 {
