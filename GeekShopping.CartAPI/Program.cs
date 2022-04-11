@@ -40,7 +40,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+
 builder.Services.AddScoped<IRabbitMQMessageSender, RabbitMQMessageSender>();
+
+builder.Services.AddHttpClient<ICouponRepository, CouponRepository>(s => s.BaseAddress =
+                                                                    new Uri(builder.Configuration["ServicesUrl:CouponAPI"]));
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

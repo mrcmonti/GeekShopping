@@ -27,7 +27,7 @@ namespace GeekShopping.OrderAPI.Repository
         public async Task UpdateOrderPaymentStatus(long orderHeaderId, bool status)
         {
             await using var _db = new MySqlContext(_context);
-            var header = await _db.Headers.FirstOrDefaultAsync(o => o.Id == orderHeaderId);
+            OrderHeader? header = await _db.Headers.FirstOrDefaultAsync(o => o.Id == orderHeaderId);
             if (header != null)
             {
                 header.PaymentStatus = status;

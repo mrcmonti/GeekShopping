@@ -1,7 +1,6 @@
-using GeekShopping.OrderAPI.MessageConsumer;
-using GeekShopping.OrderAPI.Model.Context;
-using GeekShopping.OrderAPI.RabbitMQSender;
-using GeekShopping.OrderAPI.Repository;
+using GeekShopping.PaymentAPI.MessageConsumer;
+using GeekShopping.PaymentAPI.RabbitMQSender;
+using GeekShopping.PaymentProcessor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -9,6 +8,9 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IProcessPayment, ProcessPayment>();
+builder.Services.AddSingleton<IRabbitMQMessageSender, RabbitMQMessageSender>();
+builder.Services.AddHostedService<RabbitMQPaymentConsumer>();
 
 builder.Services.AddControllers();
 builder.Services.AddAuthentication("Bearer")
@@ -29,20 +31,6 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("scope", "geek_shopping");
     });
 });
-
-var connection = builder.Configuration["MySqlConnection:MySqlConnectionString"];
-builder.Services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 5))));
-
-
-var contextOptionsBuilder = new DbContextOptionsBuilder<MySqlContext>();
-contextOptionsBuilder.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 5)));
-
-builder.Services.AddSingleton(new OrderRepository(contextOptionsBuilder.Options));
-
-builder.Services.AddHostedService<RabbitMQCheckoutConsumer>();
-builder.Services.AddHostedService<RabbitMQPaymentConsumer>();
-
-builder.Services.AddSingleton<IRabbitMQMessageSender, RabbitMQMessageSender>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -76,6 +64,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
